@@ -1,5 +1,10 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from rest_framework import generics
+from .models import Recipe
+from .serializers import RecipeSerializer
 
-def index(request):
-    return HttpResponse("Hello World")
+class ListTodo(generics.ListAPIView):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer
+class DetailTodo(generics.ListAPIView):
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeSerializer

@@ -15,7 +15,6 @@ class Recipe(models.Model):
         max_length=20,
         default='')
     #作ったuserid
-    
     userId = models.CharField(
         max_length=20,
         default='')
