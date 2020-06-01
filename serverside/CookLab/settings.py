@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #追加コード
     'rest_framework',
+    'corsheaders',
     'app',
 ]
 
@@ -49,6 +51,10 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    #追加コード
+    'corsheaders.middleware.CorsMiddleware', # new topに置く
+    'django.middleware.common.CommonMiddleware', # new
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,6 +63,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:8000',
+]
+# CORS_ORIGIN_ALLOW_ALL = False
 
 ROOT_URLCONF = 'CookLab.urls'
 
