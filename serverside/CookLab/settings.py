@@ -47,13 +47,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    'EXCEPTION_HANDLER': 'djangotodo.todos.utils.custom_exception_handler'
+    # 'EXCEPTION_HANDLER': 'djangotodo.todos.utils.custom_exception_handler'
 }
 
 MIDDLEWARE = [
     #追加コード
     'corsheaders.middleware.CorsMiddleware', # new topに置く
-    'django.middleware.common.CommonMiddleware', # new
+    # 'django.middleware.common.CommonMiddleware', # new
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -65,9 +65,15 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    'http://127.0.0.1:8000',
+    # 'http://127.0.0.1:8000',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1',
+    # 'http://192.168.100.107:3000',
+    # 'localhost:3000',
 ]
+
 # CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'CookLab.urls'
 

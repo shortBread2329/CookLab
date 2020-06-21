@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+// index.htmlのidがrootのtagにApp.jsのrender結果をいれる。
 ReactDOM.render(
   <React.StrictMode>
     <App />
