@@ -10,7 +10,7 @@ export default class MenuVertical extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { activeItem: 'レシピを投稿する' }
+    this.state = { activeItem: SystemConst.MENU_ITEM_2 }
     this.props.updateMenuState(this.state);
   }
 
