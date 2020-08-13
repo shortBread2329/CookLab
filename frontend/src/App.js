@@ -1,6 +1,6 @@
 import React, { Component }  from 'react';
 import SystemConst from './Const';
-import { Grid } from 'semantic-ui-react'
+import { Grid,Header } from 'semantic-ui-react'
 import axios from 'axios';
 import RecipeMessage from './components/RecipeMessage';
 import MenuVertical from './components/menu';
@@ -10,6 +10,7 @@ import 'semantic-ui-css/semantic.min.css';
 
 class App extends Component {
   state = {
+    searchKeyword:'',
     recipes:[],
     activeItem:'',
     loginState:false,
@@ -31,8 +32,9 @@ class App extends Component {
       });
   }
 
-  updateMenuState(state){
-    this.setState(state);
+  updateMenuState(_state){
+    this.setState(_state);
+    console.log(_state);
   }
 
   //コンポーネントが呼ばれた初回に起動
@@ -40,17 +42,14 @@ class App extends Component {
     this.getRecipes();
   }
 
-  componentDidUpdate(prevProps) {
-    // props.id が変更されたら再フェッチ
-    if (this.props !== prevProps) {
-    }
-  }
   render() {
     switch(this.state.activeItem){
+      case SystemConst.MENU_ITEM_0:
+        this.message = <p>{this.state.searchKeyword}画面はまだ工事中です。</p>;
+        break;
       case SystemConst.MENU_ITEM_1:
         this.message = <CreateRecipeCard />
         break;
-
       case SystemConst.MENU_ITEM_2:
         this.message = <RecipeMessage recipes={this.state.recipes} />
         break;
@@ -58,7 +57,7 @@ class App extends Component {
         this.message = <LoginCard />
         break;
       default:
-        this.message = this.state.activeItem + " 画面はまだ工事中です。 ";
+        this.message = <p>{this.state.activeItem}画面はまだ工事中です。</p>;
         break;
     }
 
@@ -68,11 +67,11 @@ class App extends Component {
         <MenuVertical updateMenuState={this.updateMenuState.bind(this)} />
       </Grid.Column>
       <Grid.Column stretched width={13}>
-      {/* <Grid.Column width={12}> */}
+        <Header as="h1">{this.state.activeItem}</Header>
         {this.message}        
       </Grid.Column>
       </Grid>
-    )
+    );
   }
 }
 

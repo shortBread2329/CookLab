@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Message } from 'semantic-ui-react';
+import { Message,Header } from 'semantic-ui-react';
 
 export default class RecipeMessage extends Component {
   render() {
     return(
-      this.props.recipes.map( recipe=> {
-        return <Message key={recipe.id}>
+      this.props.recipes.map( (recipe) => (
+        <Message key={recipe.id}>
         <Message.Header>{recipe.name}</Message.Header>
         <Message.List>
         <Message.Item>'Id'{recipe.id}</Message.Item>
@@ -15,7 +15,7 @@ export default class RecipeMessage extends Component {
         <Message.Item>'status'{recipe.status}</Message.Item>
         </Message.List>
         </Message>
-      })
+      ))
     );  
   }
 }

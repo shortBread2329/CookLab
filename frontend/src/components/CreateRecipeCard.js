@@ -7,7 +7,6 @@ import {
   Card,
 } from 'semantic-ui-react'
 
-
 export default class CreateRecipeCard extends Component {
 
     state = {
@@ -60,18 +59,3 @@ export default class CreateRecipeCard extends Component {
         )
     }
 }
-
-
-
-// class FormExampleFieldControl extends Component {
-//   state = {}
-
-//   handleChange = (e, { value }) => this.setState({ value })
-
-//   render() {
-//     return (
-//     )
-//   }
-// }
-
-// export default FormExampleFieldControl
