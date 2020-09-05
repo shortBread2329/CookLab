@@ -1,8 +1,7 @@
-# from django.conf.urls import url
-from django.urls import path
+from django.conf.urls import url, include
+from rest_framework import routers
 from . import views
 
-urlpatterns = [
-    path('', views.ListTodo.as_view()),
-    path('<int:pk>/', views.DetailTodo.as_view()),
-]
+router = routers.DefaultRouter()
+router.register(r'search', views.SearchTodo)
+urlpatterns = router.urls

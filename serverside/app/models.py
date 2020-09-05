@@ -23,3 +23,14 @@ class Recipe(models.Model):
     def __str__(self):
         """A string representation of the model."""
         return self.name
+
+# 材料テーブル
+class Ingredients(models.Model):
+    name = models.CharField(max_length=200)
+# 作り方テーブル
+class Step(models.Model):
+    name = models.CharField(max_length=200)
+#　ユーザーテーブル
+class User(models.Model):
+    accountname = models.CharField(max_length=20)
+    password = models.CharField(max_length=20)

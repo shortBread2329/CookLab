@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react'
 import SystemConst from '../Const';
-import { Menu,Input } from 'semantic-ui-react'
+import { Menu,Input,Label } from 'semantic-ui-react'
 
 export default class MenuVertical extends Component {
   state = { 
@@ -69,7 +69,10 @@ export default class MenuVertical extends Component {
           name={SystemConst.MENU_ITEM_5}
           active={activeItem === SystemConst.MENU_ITEM_5}
           onClick={this.handleItemClick}
-        />
+        >
+          {SystemConst.MENU_ITEM_5}
+          <Label color='teal'>1</Label>
+        </Menu.Item>
       </Menu>
     );
   }

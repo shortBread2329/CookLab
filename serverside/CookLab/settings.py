@@ -41,12 +41,15 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'app',
+    'django_filters',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+    # FilterUiを出してくれる設定
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     # 'EXCEPTION_HANDLER': 'djangotodo.todos.utils.custom_exception_handler'
 }
 
