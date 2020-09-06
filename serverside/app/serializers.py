@@ -10,10 +10,10 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
-            'IngredientsId',
+            'ingredientsId',
             'stepId',
             'userId',
-            'status',
+            'validFlag',
         )
 
 class RecipeFilter(filters.FilterSet):
@@ -24,8 +24,8 @@ class RecipeFilter(filters.FilterSet):
         fields = (
             'id',
             'name',
-            'IngredientsId',
-            'stepId',
-            'userId',
-            'status',
+            # 'ingredientsId',
+            # 'stepId',
+            # 'userId',
+            'validFlag',
         )
