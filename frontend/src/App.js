@@ -23,7 +23,7 @@ class App extends Component {
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
     axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
     axios
-      .get('/api/search?id=2', )
+      .get('/api/search', )
       .then(res => {
           this.setState({ recipes: res.data });
       })
