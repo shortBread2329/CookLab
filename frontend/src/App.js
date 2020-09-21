@@ -1,6 +1,6 @@
 import React, { Component }  from 'react';
 import SystemConst from './Const';
-import { Grid,Header } from 'semantic-ui-react'
+import { Grid,Header} from 'semantic-ui-react'
 import axios from 'axios';
 import RecipeMessage from './components/RecipeMessage';
 import MenuVertical from './components/menu';
@@ -18,14 +18,21 @@ class App extends Component {
 
   message = ''
 
-  getRecipes() {
+  getRecipes(paramState = []) {
     axios.defaults.baseURL = 'http://127.0.0.1:8000';
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
     axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+    let keyword = "";
+    if (this.state.searchKeyword != ""){
+        keyword = "?name=" + paramState.searchKeyword;
+    }
+    console.log(keyword);
     axios
-      .get('/api/search', )
+      .get('/api/search' + keyword, )
       .then(res => {
-          this.setState({ recipes: res.data });
+        paramState.recipes = res.data;
+        console.log(paramState);
+        this.setState(paramState);
       })
       .catch(err => {
           console.log(err);
@@ -42,10 +49,20 @@ class App extends Component {
     this.getRecipes();
   }
 
+  // componentDidUpdate(prevProps, prevState){
+  //   this.getRecipes();
+  // }
+
   render() {
     switch(this.state.activeItem){
       case SystemConst.MENU_ITEM_0:
-        this.message = <p>{this.state.searchKeyword}画面はまだ工事中です。</p>;
+      //   this.message = <Segment>
+      //   <Dimmer active inverted>
+      //     <Loader inverted>Loading</Loader>
+      //   </Dimmer>
+      //   <Image src='/images/wireframe/short-paragraph.png' />
+      // </Segment>
+        this.message = <RecipeMessage recipes={this.state.recipes} />
         break;
       case SystemConst.MENU_ITEM_1:
         this.message = <CreateRecipeCard />
@@ -62,16 +79,28 @@ class App extends Component {
     }
 
     return (
-      <Grid>
+      <Grid columns={2}>
       <Grid.Column width={3}> 
-        <MenuVertical updateMenuState={this.updateMenuState.bind(this)} />
+      {/* <Grid.Column>  */}
+        <MenuVertical updateMenuState={this.updateMenuState.bind(this)} getRecipes={this.getRecipes.bind(this)}/>
       </Grid.Column>
-      <Grid.Column stretched width={13}>
+      {/* <Grid.Column width={13}> */}
+      {/* <Grid.Column floated='left' stretched> */}
+      <Grid.Column>
         <Header as="h1">{this.state.activeItem}</Header>
-        {this.message}        
+        {this.message}
       </Grid.Column>
       </Grid>
-    );
+
+      // <div>
+      //   <MenuVertical updateMenuState={this.updateMenuState.bind(this)} />
+      //   <Segment attached="top">
+      //     <Header as="h1">{this.state.activeItem}</Header>
+      //     {this.message}
+      //   </Segment>
+      // </div>
+
+      );
   }
 }
 

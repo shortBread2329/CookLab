@@ -26,17 +26,20 @@ export default class MenuVertical extends Component {
   search = (e, { name, value })  => {
     let state = { 
       activeItem: name,
-      searchKeyword:value};
+      searchKeyword:value,
+      recipes:[]
+    };
     this.setState(state);
-    this.props.updateMenuState(state);
+    this.props.getRecipes(state);  
   }
 
 
   render() {
     const { activeItem } = this.state;
     return (
-    <Menu pointing secondary vertical>
-        <Menu.Item>
+      // <Menu pointing secondary vertical>
+    <Menu secondary vertical>
+      <Menu.Item>
           <Input
             icon={{ name: 'search', circular: true, link: true }}
             placeholder="レシピ検索"

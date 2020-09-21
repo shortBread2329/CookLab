@@ -4,5 +4,5 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'search', views.SearchTodo)
-router.register(r'test', views.TestJoin)
+# router.register(r'test', views.TestJoin)x
 urlpatterns = router.urls
