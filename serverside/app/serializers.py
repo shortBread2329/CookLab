@@ -49,17 +49,26 @@ class RecipeFilter(filters.FilterSet):
         fields = "__all__"
 
 class IngredientsSerializer(ModelSerializer):
-    ingredientName = SerializerMethodField()
+    name = SerializerMethodField()
+    quantity = SerializerMethodField()
     class Meta:
         model = Ingredients
         fields = [
             "ingredientId",
             "validFlag",
-            "ingredientName",
+            "name",
+            "quantity",
         ]
-    def get_ingredientName(self, obj):
+    def get_name(self, obj):
         try:
             contents = obj.ingredientId.name
+            return contents
+        except:
+            contents = None
+            return contents
+    def get_quantity(self, obj):
+        try:
+            contents = obj.ingredientId.quantity
             return contents
         except:
             contents = None

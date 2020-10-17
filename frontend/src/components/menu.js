@@ -3,11 +3,13 @@
  */
 import React, { Component } from 'react'
 import SystemConst from '../Const';
-import { Menu,Input,Label } from 'semantic-ui-react'
+import { Menu,Input,Label,Accordion } from 'semantic-ui-react'
+import CreateRecipeCard from './CreateRecipeCard';
 
 export default class MenuVertical extends Component {
   state = { 
-    activeItem: SystemConst.MENU_ITEM_2,
+    // activeItem: SystemConst.MENU_ITEM_2,
+    activeItem: SystemConst.MENU_ITEM_1,
     searchKeyword:'' }
 
   constructor(props) {
@@ -38,21 +40,28 @@ export default class MenuVertical extends Component {
     const { activeItem } = this.state;
     return (
       // <Menu pointing secondary vertical>
-    <Menu secondary vertical>
+    <Menu secondary vertical as={Accordion} tabular='right'>
       <Menu.Item>
-          <Input
-            icon={{ name: 'search', circular: true, link: true }}
-            placeholder="レシピ検索"
-            value={this.state.searchKeyword}
-            name={SystemConst.MENU_ITEM_0}
-            onChange={this.search}
-          />
-        </Menu.Item>  
+        <Input
+          icon={{ name: 'search', circular: true, link: true }}
+          placeholder="レシピ検索"
+          value={this.state.searchKeyword}
+          name={SystemConst.MENU_ITEM_0}
+          // active={activeItem === SystemConst.MENU_ITEM_0}
+          onChange={this.search}
+        />
+      </Menu.Item>  
         <Menu.Item
           name={SystemConst.MENU_ITEM_1}
           active={activeItem === SystemConst.MENU_ITEM_1}
-          onClick={this.handleItemClick}
-        />
+          onClick={this.handleItemClick}>        
+          <Accordion.Title content={SystemConst.MENU_ITEM_1}/>
+          <Accordion.Content 
+            active={activeItem === SystemConst.MENU_ITEM_1} 
+            content={<CreateRecipeCard 
+              updateMenuState={this.props.updateMenuState.bind(this)} 
+              />} />
+        </Menu.Item>
         <Menu.Item
           name={SystemConst.MENU_ITEM_2}
           active={activeItem === SystemConst.MENU_ITEM_2}

@@ -1,17 +1,19 @@
 import React, { Component }  from 'react';
 import SystemConst from './Const';
-import { Grid,Header} from 'semantic-ui-react'
+import { Grid,Message} from 'semantic-ui-react'
 import axios from 'axios';
 import RecipeMessage from './components/RecipeMessage';
 import MenuVertical from './components/menu';
 import LoginCard from './components/LoginCard';
-import CreateRecipeCard from './components/CreateRecipeCard';
+// import CreateRecipeCard from './components/CreateRecipeCard';
+// import PreviewRecipe from './components/PreviewRecipe';
 import 'semantic-ui-css/semantic.min.css';
 
 class App extends Component {
   state = {
     searchKeyword:'',
     recipes:[],
+    previewRecipes:[],
     activeItem:'',
     loginState:false,
   }
@@ -19,7 +21,7 @@ class App extends Component {
   message = ''
 
   getRecipes(paramState = []) {
-    axios.defaults.baseURL = 'http://127.0.0.1:8000';
+    axios.defaults.baseURL = SystemConst.ServerUrl;
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
     axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
     let keyword = "";
@@ -28,7 +30,7 @@ class App extends Component {
     }
     console.log(keyword);
     axios
-      .get('/api/search' + keyword, )
+      .get(SystemConst.SeachDir + keyword, )
       .then(res => {
         paramState.recipes = res.data;
         console.log(paramState);
@@ -37,6 +39,15 @@ class App extends Component {
       .catch(err => {
           console.log(err);
       });
+  }
+
+  getViewRecipes(paramState = []) {
+    // paramState.recipes = res.data;
+    paramState.recipes = [
+
+    ]
+    console.log(paramState);
+    this.setState(paramState);
   }
 
   updateMenuState(_state){
@@ -65,7 +76,7 @@ class App extends Component {
         this.message = <RecipeMessage recipes={this.state.recipes} />
         break;
       case SystemConst.MENU_ITEM_1:
-        this.message = <CreateRecipeCard />
+        this.message = <RecipeMessage recipes={this.state.recipes}/>
         break;
       case SystemConst.MENU_ITEM_2:
         this.message = <RecipeMessage recipes={this.state.recipes} />
@@ -79,18 +90,30 @@ class App extends Component {
     }
 
     return (
-      <Grid columns={2}>
-      <Grid.Column width={3}> 
+      // <Grid columns={2}>
+      <Grid>
       {/* <Grid.Column>  */}
-        <MenuVertical updateMenuState={this.updateMenuState.bind(this)} getRecipes={this.getRecipes.bind(this)}/>
-      </Grid.Column>
       {/* <Grid.Column width={13}> */}
       {/* <Grid.Column floated='left' stretched> */}
-      <Grid.Column>
-        <Header as="h1">{this.state.activeItem}</Header>
+      <Grid.Column stretched width={12} >
+      {/* <Grid.Column> */}
+        {/* <Message header={this.state.activeItem} attached></Message> */}
         {this.message}
       </Grid.Column>
+      <Grid.Column width={4}> 
+        <MenuVertical 
+        updateMenuState={this.updateMenuState.bind(this)} 
+        getRecipes={this.getRecipes.bind(this)}/>
+      </Grid.Column>
+
       </Grid>
+
+      // <div>
+      // <MenuVertical updateMenuState={this.updateMenuState.bind(this)} getRecipes={this.getRecipes.bind(this)}/>
+      // <Header as="h1">{this.state.activeItem}</Header>
+      // {this.message}
+      // </div>
+
 
       // <div>
       //   <MenuVertical updateMenuState={this.updateMenuState.bind(this)} />
