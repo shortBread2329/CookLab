@@ -21,12 +21,12 @@ CookLab
 ## Usage
 - [CookLab/frontend][1]
 
->python CookLab/serverside/manage.py runserver
+>cd CookLab/frontend<br>
+>npm start
 
 - [CookLab/serverside][2]
 
->cd CookLab/frontend<br>
->npm start
+>python CookLab/serverside/manage.py runserver
 
 ## Install
 - [CookLab/frontend][1]
