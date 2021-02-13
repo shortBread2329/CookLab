@@ -15,12 +15,11 @@ class RecipeSerializer(ModelSerializer):
             "name",
             "validFlag",
             "usersId",
-
             # "recipeId",
             "ingredientId",
             "stepId",
         ]
-
+        
     def get_ingredientId(self, obj):
         try:
             # contents = IngredientsSerializer(Ingredients.objects.all().filter(recipeId = Ingredients.objects.get(id=obj.id)), many=True).data
@@ -82,7 +81,7 @@ class IngredientsFilter(filters.FilterSet):
         fields = "__all__"
 
 class IngredientSerializer(ModelSerializer):
-    ingredientName = SerializerMethodField()
+    # ingredientName = SerializerMethodField()
     class Meta:
         model = Ingredient
         fields = [
@@ -126,7 +125,7 @@ class StepsFilter(filters.FilterSet):
         fields = "__all__"
 
 class StepSerializer(ModelSerializer):
-    StepName = SerializerMethodField()
+    # StepName = SerializerMethodField()
     class Meta:
         model = Step
         fields = [
@@ -142,3 +141,34 @@ class StepFilter(filters.FilterSet):
         model = Step
         fields = "__all__"
 
+class LsTestSerializer(ModelSerializer):
+    ingredientId = SerializerMethodField()
+    stepId = SerializerMethodField()
+    class Meta:
+        model = Recipe
+        # fields = "__all__"
+        fields = [
+            "id",
+            "name",
+            "validFlag",
+            "usersId",
+            # "recipeId",
+            "ingredientId",
+            "stepId",
+        ]
+
+    def get_ingredientId(self, obj):
+        try:
+            contents = IngredientsSerializer(Ingredients.objects.all().filter(recipeId = Recipe.objects.get(id=obj.id)), many=True).data
+            return contents
+        except:
+            contents = None
+            return contents
+
+    def get_stepId(self, obj):
+        try:
+            contents = StepsSerializer(Steps.objects.all().filter(recipeId = Recipe.objects.get(id=obj.id)), many=True).data
+            return contents
+        except:
+            contents = None
+            return contents

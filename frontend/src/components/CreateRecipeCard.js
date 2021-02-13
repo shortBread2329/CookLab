@@ -1,4 +1,6 @@
+import Cookies from 'js-cookie';
 import React, { Component }  from 'react';
+import axios from 'axios';
 import {
   Message,
   Button,
@@ -29,21 +31,21 @@ export default class CreateRecipeCard extends Component {
         name:'',
         usersId:'',
         // secondCard:''
-        recipes:[{
-                id:0,
-                ingredientId:[],
-                name:"",
-                stepId:[],
-            }]
+        previewRecipes:[{
+            id:0,
+            ingredientId:[],
+            name:"",
+            stepId:[],
+            unit:"cc"
+        }],
     };
 
     // handleChange = (e, { name, value }) => this.setState({ [name]: value })
     handleChange = (e, { name, value }) => {
-        this.state.recipes[0][name] = value;
-        this.setState(this.state.recipes);
+        this.state.previewRecipes[0][name] = value;
+        this.setState(this.state);
         this.props.updateMenuState(this.state);
-
-        console.log(this.state.recipes)
+        console.log(this.state.previewRecipes)
     }  
     url = SystemConst.ServerUrl+SystemConst.SeachDir
 
@@ -51,11 +53,41 @@ export default class CreateRecipeCard extends Component {
         const { name, usersId } = this.state
         this.setState({ submittedName: name, submittedUserId: usersId })
       }    
+    
+    addIngredient = () => {
+        let recipe = this.state.previewRecipes[0];
+        recipe.ingredientId.push({
+            ingredientId:recipe.ingredientId.length,
+            name:recipe.ingredientName,
+            quantity:recipe.quantity + recipe.unit,
+        })
+    }
+
+    addStep = () => {
+        let recipe = this.state.previewRecipes[0];
+        recipe.stepId.push({
+            stepId:recipe.stepId.length,
+            stepText:recipe.stepText
+        })
+    }
+
+    createRecipe = () => {
+        axios.defaults.baseURL = SystemConst.ServerUrl;
+        axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+        axios.post(SystemConst.SeachDir+"/",{
+            name:"塩レモンパウンドケーキ",
+            usersId:1
+        })
+        .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+              console.log(err);
+            });    
+    }
 
     render() {
-        const { name, email, submittedName, submittedEmail } = this.state
         return(
-            // <Form success onSubmit={this.handleSubmit} method="POST" action={this.url} className='attached fluid segment'>
             <div>
                 <label>レシピ名</label>
                 <Input 
@@ -64,16 +96,28 @@ export default class CreateRecipeCard extends Component {
                 onChange={this.handleChange}
                 />
                 <label>材料</label>
-                <Input placeholder='材料名' />
-                <Input placeholder='分量' />
+                <Input 
+                    name="ingredientName"
+                    onChange={this.handleChange}
+                    placeholder='材料名' />
+                <Input 
+                    name="quantity"
+                    onChange={this.handleChange}
+                    placeholder='分量' />
                 <Dropdown
+                name="quantityTani"
+                onChange={this.handleChange}
                 button basic floating
                 defaultValue='cc' options={options}>
                 </Dropdown>
-                <Button>追加</Button>
-                <Input placeholder='作り方'/>
-                <Button>追加</Button>
+                <Button　onClick={this.addIngredient}>追加</Button>
+                <Input 
+                    name="stepText"
+                    onChange={this.handleChange}
+                    placeholder='作り方'/>
+                <Button onClick={this.addStep}>追加</Button>
                 {/* <Button type='submit'>確認</Button> */}
+                <Button onClick={this.createRecipe}>レシピ作成</Button>
             </div>
 
 

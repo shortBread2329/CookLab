@@ -4,5 +4,9 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'search', views.SearchTodo)
-# router.register(r'test', views.TestJoin)x
+router.register(r'ingredient', views.IngredientView)
+router.register(r'step', views.StepView)
+# router.register(r'insert', views.LsTestView)
+# router.register(r'user', views.UserView)
+router.register(r'otamesi', views.TestJoin,basename='Recipe')
 urlpatterns = router.urls

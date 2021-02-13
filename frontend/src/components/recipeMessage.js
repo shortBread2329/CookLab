@@ -21,12 +21,7 @@ export default class RecipeMessage extends Component {
         return(
           <Message key={recipe.id}>
           <Message.Header>{recipe.name}</Message.Header>
-          <List>
-          {/* <List.Item>Id:{recipe.id}</List.Item> */}
-          {/* <Message.Item>'userId'{recipe.userId}</Message.Item> */}
-          {/* <List.Item>validFlag:{recipe.validFlag.toString()}</List.Item> */}
-          {recipeItems}
-          </List>
+          <List>{recipeItems}</List>
           </Message>  
         )
       })

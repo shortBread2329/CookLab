@@ -60,6 +60,7 @@ export default class MenuVertical extends Component {
             active={activeItem === SystemConst.MENU_ITEM_1} 
             content={<CreateRecipeCard 
               updateMenuState={this.props.updateMenuState.bind(this)} 
+              getRecipes={this.props.getRecipes.bind(this)} 
               />} />
         </Menu.Item>
         <Menu.Item

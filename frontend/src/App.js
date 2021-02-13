@@ -1,3 +1,4 @@
+// import Cookies from 'js-cookie';
 import React, { Component }  from 'react';
 import SystemConst from './Const';
 import { Grid,Message} from 'semantic-ui-react'
@@ -6,7 +7,7 @@ import RecipeMessage from './components/RecipeMessage';
 import MenuVertical from './components/menu';
 import LoginCard from './components/LoginCard';
 // import CreateRecipeCard from './components/CreateRecipeCard';
-// import PreviewRecipe from './components/PreviewRecipe';
+import PreviewRecipe from './components/PreviewRecipe';
 import 'semantic-ui-css/semantic.min.css';
 
 class App extends Component {
@@ -23,7 +24,7 @@ class App extends Component {
   getRecipes(paramState = []) {
     axios.defaults.baseURL = SystemConst.ServerUrl;
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
-    axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+    // axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
     let keyword = "";
     if (this.state.searchKeyword != ""){
         keyword = "?name=" + paramState.searchKeyword;
@@ -34,6 +35,7 @@ class App extends Component {
       .then(res => {
         paramState.recipes = res.data;
         console.log(paramState);
+        // console.log(Cookies.get('csrftoken'));
         this.setState(paramState);
       })
       .catch(err => {
@@ -76,7 +78,7 @@ class App extends Component {
         this.message = <RecipeMessage recipes={this.state.recipes} />
         break;
       case SystemConst.MENU_ITEM_1:
-        this.message = <RecipeMessage recipes={this.state.recipes}/>
+        this.message = <PreviewRecipe recipes={this.state.previewRecipes}/>
         break;
       case SystemConst.MENU_ITEM_2:
         this.message = <RecipeMessage recipes={this.state.recipes} />
