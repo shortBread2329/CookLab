@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from .models import *
 from .serializers import *
 from rest_framework.generics import RetrieveAPIView
@@ -20,18 +20,11 @@ class SearchTodo(viewsets.ModelViewSet):
             return Response({'status': 'password set'})
         else:
             return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+                status=status.HTTP_400_BAD_REQUEST)
 
 class TestJoin(viewsets.ModelViewSet):
-    def list(self, request):
-        # この下の二行こぴったけどどんな動きなのか調べときましょうね
-        queryset = list(itertools.chain(
-            Recipe.objects.all(), 
-            # User.objects.all(), 
-            Ingredient.objects.all()))
-        
-        serializer = RecipeSerializer(queryset, many=True)
-        return Response(serializer.data)
+    queryset = Recipe.objects.all()        
+    serializer_class = RecipeSerializer
 
 class IngredientView(viewsets.ModelViewSet):
     serializer_class = IngredientSerializer
@@ -41,27 +34,13 @@ class StepView(viewsets.ModelViewSet):
     serializer_class = StepSerializer
     queryset = Step.objects.all()
 
+class StepsView(viewsets.ModelViewSet):
+    serializer_class = StepsSerializer
+    queryset = Steps.objects.all()
+
 class UserView(viewsets.ModelViewSet):
     serializer_class = StepSerializer
     queryset = User.objects.all()
-
-#20210206作りました。ListSerializerというものでシリアライザーを作れば複数モデルもらくにたいおうできるんじゃないか作戦でした。
-#情報が少ないですよね。海外公式サイトが見れるようになりたいですよね。
-class LsTestView(viewsets.ModelViewSet):
-    queryset = Recipe.objects.all()
-    serializer_class = LsTestSerializer
-
-# 20201024今日は各modelとビューを作っていこうと思いますよ
-
-    # filter_class = IngredientsFilter
-    # queryset = Ingredients.objects.select_related('recipeId').all()
-    # queryset = Recipe.objects.all()
-
-    # queryset = Ingredient.objects.all()
-    # serializer_class = IngredientSerializer
-
-    # queryset = Ingredients.objects.all()
-    # serializer_class = IngredientsSerializer
 
 
 # class ListTodo(generics.ListAPIView):

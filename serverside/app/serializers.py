@@ -3,50 +3,6 @@ from django_filters import rest_framework as filters
 from rest_framework.serializers import * 
 from .models import *
 
-# DBとのシリアライズを担当
-class RecipeSerializer(ModelSerializer):
-    ingredientId = SerializerMethodField()
-    stepId = SerializerMethodField()
-    class Meta:
-        model = Recipe
-        # fields = "__all__"
-        fields = [
-            "id",
-            "name",
-            "validFlag",
-            "usersId",
-            # "recipeId",
-            "ingredientId",
-            "stepId",
-        ]
-        
-    def get_ingredientId(self, obj):
-        try:
-            # contents = IngredientsSerializer(Ingredients.objects.all().filter(recipeId = Ingredients.objects.get(id=obj.id)), many=True).data
-            contents = IngredientsSerializer(Ingredients.objects.all().filter(recipeId = Recipe.objects.get(id=obj.id)), many=True).data
-            #↑ここを"Comment.objects.all().filter(target_article = Article.objects.get(id=obj.id)"
-            #とだけにすると、"Item is not JSON serializable"というエラーが出ますので
-            #Serializer(出力させたいもの).data　という処理が必要です。
-            return contents
-        except:
-            contents = None
-            return contents
-
-    def get_stepId(self, obj):
-        try:
-            contents = StepsSerializer(Steps.objects.all().filter(recipeId = Recipe.objects.get(id=obj.id)), many=True).data
-            return contents
-        except:
-            contents = None
-            return contents
-
-class RecipeFilter(filters.FilterSet):
-    # 部分一致（lookup_expr='contains'）
-    name = filters.CharFilter(lookup_expr='contains')
-    class Meta:
-        model = Recipe
-        fields = "__all__"
-
 class IngredientsSerializer(ModelSerializer):
     name = SerializerMethodField()
     quantity = SerializerMethodField()
@@ -104,9 +60,8 @@ class StepsSerializer(ModelSerializer):
         model = Steps
         # fields = "__all__"
         fields = [
-            # "recipeId",
+            "recipeId",
             "stepId",
-            "validFlag",
             "stepText",
         ]
     def get_stepText(self, obj):
@@ -141,9 +96,19 @@ class StepFilter(filters.FilterSet):
         model = Step
         fields = "__all__"
 
-class LsTestSerializer(ModelSerializer):
+# DBとのシリアライズを担当
+class RecipeSerializer(ModelSerializer):
+    # ingredientId = SerializerMethodField(read_only=True)
+    # ingredients_recipeId = PrimaryKeyRelatedField(queryset=Ingredients.objects.all(), write_only=True)
+    # stepId = SerializerMethodField(read_only=True)
     ingredientId = SerializerMethodField()
-    stepId = SerializerMethodField()
+    step = SerializerMethodField()
+    # step = StepsSerializer()
+    # step = StepsSerializer(read_only=True)
+    # stepId = PrimaryKeyRelatedField(queryset=Steps.objects.all(),many=True)
+    # ingredientId = IngredientsSerializer(readonly = True)
+    # stepId = serializers.PrimaryKeyRelatedField(queryset=Step.objects.all(), write_only=True)
+
     class Meta:
         model = Recipe
         # fields = "__all__"
@@ -152,23 +117,42 @@ class LsTestSerializer(ModelSerializer):
             "name",
             "validFlag",
             "usersId",
-            # "recipeId",
+            # "ingredients_recipeId",
             "ingredientId",
-            "stepId",
+            "step",
+            # "stepId",
         ]
+        
+    # def create(self, validated_date):
+    #     validated_date['step'] = validated_date.get('stepId', None)
+    #     if validated_date['step'] is None:
+    #         raise ValidationError("step not found.") 
+    #     del validated_date['stepId']
+    #     return Recipe.objects.create(**validated_date)
 
     def get_ingredientId(self, obj):
         try:
+            # contents = IngredientsSerializer(Ingredients.objects.all().filter(recipeId = Ingredients.objects.get(id=obj.id)), many=True).data
             contents = IngredientsSerializer(Ingredients.objects.all().filter(recipeId = Recipe.objects.get(id=obj.id)), many=True).data
+            #↑ここを"Comment.objects.all().filter(target_article = Article.objects.get(id=obj.id)"
+            #とだけにすると、"Item is not JSON serializable"というエラーが出ますので
+            #Serializer(出力させたいもの).data　という処理が必要です。
             return contents
         except:
             contents = None
             return contents
 
-    def get_stepId(self, obj):
+    def get_step(self, obj):
         try:
             contents = StepsSerializer(Steps.objects.all().filter(recipeId = Recipe.objects.get(id=obj.id)), many=True).data
             return contents
         except:
             contents = None
             return contents
+
+class RecipeFilter(filters.FilterSet):
+    # 部分一致（lookup_expr='contains'）
+    name = filters.CharFilter(lookup_expr='contains')
+    class Meta:
+        model = Recipe
+        fields = "__all__"

@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie';
 import React, { Component }  from 'react';
 import axios from 'axios';
 import {
@@ -35,8 +34,9 @@ export default class CreateRecipeCard extends Component {
             id:0,
             ingredientId:[],
             name:"",
-            stepId:[],
-            unit:"cc"
+            step:[],
+            unit:"cc",
+            usersId:1
         }],
     };
 
@@ -65,8 +65,8 @@ export default class CreateRecipeCard extends Component {
 
     addStep = () => {
         let recipe = this.state.previewRecipes[0];
-        recipe.stepId.push({
-            stepId:recipe.stepId.length,
+        recipe.step.push({
+            stepId:recipe.step.length,
             stepText:recipe.stepText
         })
     }
@@ -74,16 +74,47 @@ export default class CreateRecipeCard extends Component {
     createRecipe = () => {
         axios.defaults.baseURL = SystemConst.ServerUrl;
         axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
-        axios.post(SystemConst.SeachDir+"/",{
-            name:"塩レモンパウンドケーキ",
-            usersId:1
-        })
+
+        console.log(this.state.previewRecipes[0]);
+        let recipeId=null;
+        // レシピ登録
+        axios.post(SystemConst.SeachDir+"/", this.state.previewRecipes[0])
         .then(res => {
             console.log(res);
-          })
-          .catch(err => {
-              console.log(err);
+            console.log(res.data.id);
+            recipeId=res.data.id;
+
+            console.log(this.state.previewRecipes[0]);
+            //　ステップズ登録
+            this.state.previewRecipes[0].step.forEach(step => {
+                axios.post("api/step/",{
+                    id:step.stepId,
+                    text:step.stepText    
+                })
+                .then(res => {
+                    console.log(res);
+                    step.stepId =res.data.id
+                //　ステップ登録
+                axios.post("api/steps/",{
+                        recipeId:recipeId,
+                        stepId:step.stepId
+                    })
+                    .then(res => {
+                        console.log(res);
+                    }).catch(err => {
+                        console.log(err);
+                        return;
+                    });                            
+                }).catch(err => {
+                    console.log(err);
+                    return;
+                });                        
             });    
+
+        }).catch(err => {
+            console.log(err);
+        });    
+
     }
 
     render() {

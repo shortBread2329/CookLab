@@ -14,7 +14,7 @@ export default class RecipeMessage extends Component {
           recipeItems.push(<List.Item>{ingredient.ingredientId}:{ingredient.name}:{ingredient.quantity}</List.Item>);
         })
         recipeItems.push(<List.Item>■作り方■</List.Item>);
-        recipe.stepId.map( step => {
+        recipe.step.map( step => {
           recipeItems.push(<List.Item>{step.stepId}:{step.stepText}</List.Item>);
         })
     
