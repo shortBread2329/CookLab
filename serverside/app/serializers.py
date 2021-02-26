@@ -62,6 +62,7 @@ class StepsSerializer(ModelSerializer):
         fields = [
             "recipeId",
             "stepId",
+            "stepNo",
             "stepText",
         ]
     def get_stepText(self, obj):
