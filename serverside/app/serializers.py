@@ -134,7 +134,8 @@ class RecipeSerializer(ModelSerializer):
     def get_ingredientId(self, obj):
         try:
             # contents = IngredientsSerializer(Ingredients.objects.all().filter(recipeId = Ingredients.objects.get(id=obj.id)), many=True).data
-            contents = IngredientsSerializer(Ingredients.objects.all().filter(recipeId = Recipe.objects.get(id=obj.id)), many=True).data
+            contents = IngredientsSerializer(Ingredients.objects.all()
+                .filter(recipeId = Recipe.objects.get(id=obj.id)), many=True).data
             #↑ここを"Comment.objects.all().filter(target_article = Article.objects.get(id=obj.id)"
             #とだけにすると、"Item is not JSON serializable"というエラーが出ますので
             #Serializer(出力させたいもの).data　という処理が必要です。
@@ -145,7 +146,9 @@ class RecipeSerializer(ModelSerializer):
 
     def get_step(self, obj):
         try:
-            contents = StepsSerializer(Steps.objects.all().filter(recipeId = Recipe.objects.get(id=obj.id)), many=True).data
+            contents = StepsSerializer(
+                Steps.objects.all().filter(recipeId = Recipe.objects.get(id=obj.id))
+                .order_by('stepNo'), many=True).data
             return contents
         except:
             contents = None

@@ -67,7 +67,8 @@ export default class CreateRecipeCard extends Component {
         let recipe = this.state.previewRecipes[0];
         recipe.step.push({
             stepId:recipe.step.length,
-            stepText:recipe.stepText
+            stepText:recipe.stepText,
+            stepNo:recipe.step.length+1,
         })
     }
 
@@ -85,19 +86,20 @@ export default class CreateRecipeCard extends Component {
             recipeId=res.data.id;
 
             console.log(this.state.previewRecipes[0]);
-            //　ステップズ登録
+            //　ステップ登録
             this.state.previewRecipes[0].step.forEach(step => {
                 axios.post("api/step/",{
                     id:step.stepId,
-                    text:step.stepText    
+                    text:step.stepText,
                 })
                 .then(res => {
                     console.log(res);
                     step.stepId =res.data.id
-                //　ステップ登録
+                //　ステップズ登録
                 axios.post("api/steps/",{
                         recipeId:recipeId,
-                        stepId:step.stepId
+                        stepId:step.stepId,
+                        stepNo:step.stepNo,
                     })
                     .then(res => {
                         console.log(res);
