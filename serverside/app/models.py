@@ -56,6 +56,7 @@ class Step(models.Model):
 class Steps(models.Model):
     recipeId = models.ForeignKey(Recipe, to_field='id', on_delete=models.PROTECT)
     stepId = models.ForeignKey(Step, to_field='id', on_delete=models.PROTECT)
+    stepNo = models.IntegerField(default=True)
     #有効フラグ
     validFlag = models.BooleanField(default=True)
     def __str__(self):
