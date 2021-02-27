@@ -3,8 +3,9 @@
  */
 import React, { Component } from 'react'
 import SystemConst from '../Const';
-import { Menu,Input,Label,Accordion } from 'semantic-ui-react'
+import { Menu,Input,Label,Icon,Accordion } from 'semantic-ui-react'
 import CreateRecipeCard from './CreateRecipeCard';
+import axios from 'axios';
 
 export default class MenuVertical extends Component {
   state = { 
@@ -25,6 +26,21 @@ export default class MenuVertical extends Component {
     this.props.updateMenuState(state);
   };
 
+  getRecipes(paramState = []) {
+    axios.defaults.baseURL = SystemConst.ServerUrl;
+    axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+    axios
+      .get(SystemConst.SeachDir + "?name=" + this.state.searchKeyword )
+      .then(res => {
+        paramState.recipes = res.data;
+        this.setState(paramState);
+        this.props.updateMenuState(this.state);
+      })
+      .catch(err => {
+          console.log(err);
+      });
+  }
+
   search = (e, { name, value })  => {
     let state = { 
       activeItem: name,
@@ -32,61 +48,65 @@ export default class MenuVertical extends Component {
       recipes:[]
     };
     this.setState(state);
-    this.props.getRecipes(state);  
   }
 
+  searchStart = (e) =>{
+    console.log("Enter" + e)
+    this.props.updateMenuState(this.state);
+    this.getRecipes(this.state);  
+  }
 
   render() {
     const { activeItem } = this.state;
     return (
       // <Menu pointing secondary vertical>
     <Menu secondary vertical as={Accordion} tabular='right'>
-      <Menu.Item>
+      <Menu.Item onClick={this.handleItemClick}>
         <Input
-          icon={{ name: 'search', circular: true, link: true }}
+          icon={<Icon name='search' circular link onClick={this.searchStart}/>}
           placeholder="レシピ検索"
           value={this.state.searchKeyword}
           name={SystemConst.MENU_ITEM_0}
-          // active={activeItem === SystemConst.MENU_ITEM_0}
           onChange={this.search}
-        />
+          onKeyPress={this.searchStart}
+          />
       </Menu.Item>  
-        <Menu.Item
-          name={SystemConst.MENU_ITEM_1}
-          active={activeItem === SystemConst.MENU_ITEM_1}
-          onClick={this.handleItemClick}>        
-          <Accordion.Title content={SystemConst.MENU_ITEM_1}/>
-          <Accordion.Content 
-            active={activeItem === SystemConst.MENU_ITEM_1} 
-            content={<CreateRecipeCard 
-              updateMenuState={this.props.updateMenuState.bind(this)} 
-              getRecipes={this.props.getRecipes.bind(this)} 
-              />} />
-        </Menu.Item>
-        <Menu.Item
-          name={SystemConst.MENU_ITEM_2}
-          active={activeItem === SystemConst.MENU_ITEM_2}
-          onClick={this.handleItemClick}
-        />
-        <Menu.Item
-          name={SystemConst.MENU_ITEM_3}
-          active={activeItem === SystemConst.MENU_ITEM_3}
-          onClick={this.handleItemClick}
-        />
-        <Menu.Item
-          name={SystemConst.MENU_ITEM_4}
-          active={activeItem === SystemConst.MENU_ITEM_4}
-          onClick={this.handleItemClick}
-        />
-        <Menu.Item
-          name={SystemConst.MENU_ITEM_5}
-          active={activeItem === SystemConst.MENU_ITEM_5}
-          onClick={this.handleItemClick}
-        >
-          {SystemConst.MENU_ITEM_5}
-          <Label color='teal'>1</Label>
-        </Menu.Item>
-      </Menu>
+      <Menu.Item
+        name={SystemConst.MENU_ITEM_1}
+        active={activeItem === SystemConst.MENU_ITEM_1}
+        onClick={this.handleItemClick}>        
+        <Accordion.Title content={SystemConst.MENU_ITEM_1}/>
+        <Accordion.Content 
+          active={activeItem === SystemConst.MENU_ITEM_1} 
+          content={<CreateRecipeCard 
+            updateMenuState={this.props.updateMenuState.bind(this)} 
+            getRecipes={this.getRecipes.bind(this)} 
+            />} />
+      </Menu.Item>
+      <Menu.Item
+        name={SystemConst.MENU_ITEM_2}
+        active={activeItem === SystemConst.MENU_ITEM_2}
+        onClick={this.handleItemClick}
+      />
+      <Menu.Item
+        name={SystemConst.MENU_ITEM_3}
+        active={activeItem === SystemConst.MENU_ITEM_3}
+        onClick={this.handleItemClick}
+      />
+      <Menu.Item
+        name={SystemConst.MENU_ITEM_4}
+        active={activeItem === SystemConst.MENU_ITEM_4}
+        onClick={this.handleItemClick}
+      />
+      <Menu.Item
+        name={SystemConst.MENU_ITEM_5}
+        active={activeItem === SystemConst.MENU_ITEM_5}
+        onClick={this.handleItemClick}
+      >
+        {SystemConst.MENU_ITEM_5}
+        <Label color='teal'>1</Label>
+      </Menu.Item>
+    </Menu>
     );
   }
 }

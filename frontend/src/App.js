@@ -1,18 +1,15 @@
-// import Cookies from 'js-cookie';
 import React, { Component }  from 'react';
 import SystemConst from './Const';
-import { Grid,Message} from 'semantic-ui-react'
-import axios from 'axios';
+import { Grid } from 'semantic-ui-react'
 import RecipeMessage from './components/RecipeMessage';
 import MenuVertical from './components/menu';
 import LoginCard from './components/LoginCard';
-// import CreateRecipeCard from './components/CreateRecipeCard';
 import PreviewRecipe from './components/PreviewRecipe';
 import 'semantic-ui-css/semantic.min.css';
 
 class App extends Component {
   state = {
-    searchKeyword:'',
+    searchKeyword:"",
     recipes:[],
     previewRecipes:[],
     activeItem:'',
@@ -21,37 +18,6 @@ class App extends Component {
 
   message = ''
 
-  getRecipes(paramState = []) {
-    axios.defaults.baseURL = SystemConst.ServerUrl;
-    axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
-    // axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-    let keyword = "";
-    if (this.state.searchKeyword != ""){
-        keyword = "?name=" + paramState.searchKeyword;
-    }
-    console.log(keyword);
-    axios
-      .get(SystemConst.SeachDir + keyword, )
-      .then(res => {
-        paramState.recipes = res.data;
-        console.log(paramState);
-        // console.log(Cookies.get('csrftoken'));
-        this.setState(paramState);
-      })
-      .catch(err => {
-          console.log(err);
-      });
-  }
-
-  getViewRecipes(paramState = []) {
-    // paramState.recipes = res.data;
-    paramState.recipes = [
-
-    ]
-    console.log(paramState);
-    this.setState(paramState);
-  }
-
   updateMenuState(_state){
     this.setState(_state);
     console.log(_state);
@@ -59,22 +25,11 @@ class App extends Component {
 
   //コンポーネントが呼ばれた初回に起動
   componentDidMount() {
-    this.getRecipes();
   }
-
-  // componentDidUpdate(prevProps, prevState){
-  //   this.getRecipes();
-  // }
 
   render() {
     switch(this.state.activeItem){
       case SystemConst.MENU_ITEM_0:
-      //   this.message = <Segment>
-      //   <Dimmer active inverted>
-      //     <Loader inverted>Loading</Loader>
-      //   </Dimmer>
-      //   <Image src='/images/wireframe/short-paragraph.png' />
-      // </Segment>
         this.message = <RecipeMessage recipes={this.state.recipes} />
         break;
       case SystemConst.MENU_ITEM_1:
@@ -92,39 +47,14 @@ class App extends Component {
     }
 
     return (
-      // <Grid columns={2}>
       <Grid>
-      {/* <Grid.Column>  */}
-      {/* <Grid.Column width={13}> */}
-      {/* <Grid.Column floated='left' stretched> */}
       <Grid.Column stretched width={12} >
-      {/* <Grid.Column> */}
-        {/* <Message header={this.state.activeItem} attached></Message> */}
         {this.message}
       </Grid.Column>
       <Grid.Column width={4}> 
-        <MenuVertical 
-        updateMenuState={this.updateMenuState.bind(this)} 
-        getRecipes={this.getRecipes.bind(this)}/>
+        <MenuVertical updateMenuState={this.updateMenuState.bind(this)} />
       </Grid.Column>
-
       </Grid>
-
-      // <div>
-      // <MenuVertical updateMenuState={this.updateMenuState.bind(this)} getRecipes={this.getRecipes.bind(this)}/>
-      // <Header as="h1">{this.state.activeItem}</Header>
-      // {this.message}
-      // </div>
-
-
-      // <div>
-      //   <MenuVertical updateMenuState={this.updateMenuState.bind(this)} />
-      //   <Segment attached="top">
-      //     <Header as="h1">{this.state.activeItem}</Header>
-      //     {this.message}
-      //   </Segment>
-      // </div>
-
       );
   }
 }
