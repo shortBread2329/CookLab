@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import RecipeMessage from './RecipeMessage';
-import { Message,Button } from 'semantic-ui-react';
+import { Message } from 'semantic-ui-react';
 
 export default class PreviewRecipe extends Component {
   render() {

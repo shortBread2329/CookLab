@@ -30,6 +30,10 @@ class IngredientView(viewsets.ModelViewSet):
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
 
+class IngredientsView(viewsets.ModelViewSet):
+    serializer_class = IngredientsSerializer
+    queryset = Ingredients.objects.all()
+
 class StepView(viewsets.ModelViewSet):
     serializer_class = StepSerializer
     queryset = Step.objects.all()

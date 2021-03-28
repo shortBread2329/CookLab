@@ -9,13 +9,21 @@ import axios from 'axios';
 
 export default class MenuVertical extends Component {
   state = { 
-    // activeItem: SystemConst.MENU_ITEM_2,
-    activeItem: SystemConst.MENU_ITEM_1,
-    searchKeyword:'' }
+    activeItem: SystemConst.MENU_ITEM_2,
+    // activeItem: SystemConst.MENU_ITEM_1,
+    searchKeyword:''
+  }
 
   constructor(props) {
     super(props);
-    this.props.updateMenuState(this.state);
+    // this.props.updateMenuState(this.state);
+    switch(this.state.activeItem){
+      case SystemConst.MENU_ITEM_2:
+        this.getTrend()
+        break;
+      default:
+        break;
+    }
   }
 
   //メニューItemがクリックされることをトリガーとするメソッド
@@ -26,12 +34,14 @@ export default class MenuVertical extends Component {
     this.props.updateMenuState(state);
   };
 
-  getRecipes(paramState = []) {
+  getRecipes(paramState = [],searchKeyword = this.state.searchKeyword) {
+    console.log("tes")
     axios.defaults.baseURL = SystemConst.ServerUrl;
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
     axios
-      .get(SystemConst.SeachDir + "?name=" + this.state.searchKeyword )
-      .then(res => {
+    // .get(SystemConst.SeachDir + "?name=" + searchKeyword )
+    .get(SystemConst.SeachDir + "?name=" + searchKeyword )
+    .then(res => {
         paramState.recipes = res.data;
         this.setState(paramState);
         this.props.updateMenuState(this.state);
@@ -53,11 +63,18 @@ export default class MenuVertical extends Component {
   searchStart = (e) =>{
     console.log("Enter" + e)
     this.props.updateMenuState(this.state);
-    this.getRecipes(this.state);  
+    this.getRecipes(this.state);
+  }
+
+  getTrend = () => {
+    // this.handleItemClick()
+    this.setState({searchKeyword :''})
+    this.getRecipes(this.state,'');
   }
 
   render() {
     const { activeItem } = this.state;
+    const { searchKeyword } = this.state;
     return (
       // <Menu pointing secondary vertical>
     <Menu secondary vertical as={Accordion} tabular='right'>
@@ -65,7 +82,7 @@ export default class MenuVertical extends Component {
         <Input
           icon={<Icon name='search' circular link onClick={this.searchStart}/>}
           placeholder="レシピ検索"
-          value={this.state.searchKeyword}
+          value={searchKeyword}
           name={SystemConst.MENU_ITEM_0}
           onChange={this.search}
           onKeyPress={this.searchStart}
@@ -80,7 +97,7 @@ export default class MenuVertical extends Component {
           active={activeItem === SystemConst.MENU_ITEM_1} 
           content={<CreateRecipeCard 
             updateMenuState={this.props.updateMenuState.bind(this)} 
-            getRecipes={this.getRecipes.bind(this)} 
+            // getRecipes={this.getRecipes.bind(this)} 
             />} />
       </Menu.Item>
       <Menu.Item

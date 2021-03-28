@@ -1,29 +1,18 @@
 import React, { Component }  from 'react';
 import axios from 'axios';
 import {
-  Message,
   Button,
-  Form,
   Input,
-  TextArea,
-  Card,
   Dropdown,
 } from 'semantic-ui-react'
 import SystemConst from '../Const';
-
-const options = [
-    { key: '大匙', text: '大匙', value: '大匙' },
-    { key: '小匙', text: '小匙', value: '小匙' },
-    { key: 'cc', text: 'cc', value: 'cc' },
-    { key: 'L', text: 'L', value: 'L' },
-    { key: 'g', text: 'g', value: 'g' },
-  ]
 
 export default class CreateRecipeCard extends Component {
       
     constructor(props) {
         super(props);
         this.props.updateMenuState(this.state);
+        this.tesRef = React.createRef();
       }
     
     state = {
@@ -31,8 +20,9 @@ export default class CreateRecipeCard extends Component {
         usersId:'',
         // secondCard:''
         previewRecipes:[{
+            image:'https://react.semantic-ui.com/images/wireframe/image.png',
             id:0,
-            ingredientId:[],
+            ingredient:[],
             name:"",
             step:[],
             unit:"cc",
@@ -40,9 +30,21 @@ export default class CreateRecipeCard extends Component {
         }],
     };
 
+    options = [
+        { key: '大匙', text: '大匙', value: '大匙' },
+        { key: '小匙', text: '小匙', value: '小匙' },
+        { key: 'cc', text: 'cc', value: 'cc' },
+        { key: 'L', text: 'L', value: 'L' },
+        { key: 'g', text: 'g', value: 'g' },
+        { key: '個', text: '個', value: '個' },
+      ]
+    
     // handleChange = (e, { name, value }) => this.setState({ [name]: value })
     handleChange = (e, { name, value }) => {
-        this.state.previewRecipes[0][name] = value;
+        let previewRecipes = this.state.previewRecipes.slice();
+        previewRecipes[0][name] = value;
+        this.setState({previewRecipes:previewRecipes})
+        // this.state.previewRecipes[0][name] = value;
         this.setState(this.state);
         this.props.updateMenuState(this.state);
         console.log(this.state.previewRecipes)
@@ -56,10 +58,11 @@ export default class CreateRecipeCard extends Component {
     
     addIngredient = () => {
         let recipe = this.state.previewRecipes[0];
-        recipe.ingredientId.push({
-            ingredientId:recipe.ingredientId.length,
+        recipe.ingredient.push({
+            ingredientId:recipe.ingredient.length,
             name:recipe.ingredientName,
-            quantity:recipe.quantity + recipe.unit,
+            quantity:recipe.quantity,
+            unit:recipe.unit
         })
     }
 
@@ -119,6 +122,10 @@ export default class CreateRecipeCard extends Component {
 
     }
 
+    // componentDidMount() {
+    //     this.tesRef.current.focus();
+    // }
+
     render() {
         return(
             <div>
@@ -140,8 +147,12 @@ export default class CreateRecipeCard extends Component {
                 <Dropdown
                 name="quantityTani"
                 onChange={this.handleChange}
-                button basic floating
-                defaultValue='cc' options={options}>
+                button basic
+                // ref={this.tesRef}
+                // ref={this.options}
+                defaultValue='cc' 
+                options={this.options}
+                >
                 </Dropdown>
                 <Button　onClick={this.addIngredient}>追加</Button>
                 <Input 
@@ -152,8 +163,8 @@ export default class CreateRecipeCard extends Component {
                 {/* <Button type='submit'>確認</Button> */}
                 <Button onClick={this.createRecipe}>レシピ作成</Button>
             </div>
-
-
         )
+
+        
     }
 }

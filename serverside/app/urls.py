@@ -5,6 +5,7 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r'search', views.SearchTodo)
 router.register(r'ingredient', views.IngredientView)
+router.register(r'ingredients', views.IngredientsView)
 router.register(r'step', views.StepView)
 router.register(r'steps', views.StepsView)
 # router.register(r'insert', views.LsTestView)

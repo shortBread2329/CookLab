@@ -1,7 +1,7 @@
 import React, { Component }  from 'react';
 import SystemConst from './Const';
 import { Grid } from 'semantic-ui-react'
-import RecipeMessage from './components/RecipeMessage';
+import ViewRecipe from './components/ViewRecipe';
 import MenuVertical from './components/menu';
 import LoginCard from './components/LoginCard';
 import PreviewRecipe from './components/PreviewRecipe';
@@ -11,7 +11,7 @@ class App extends Component {
   state = {
     searchKeyword:"",
     recipes:[],
-    previewRecipes:[],
+    // previewRecipes:[],
     activeItem:'',
     loginState:false,
   }
@@ -30,13 +30,13 @@ class App extends Component {
   render() {
     switch(this.state.activeItem){
       case SystemConst.MENU_ITEM_0:
-        this.message = <RecipeMessage recipes={this.state.recipes} />
+        this.message = <ViewRecipe recipes={this.state.recipes} />
         break;
       case SystemConst.MENU_ITEM_1:
         this.message = <PreviewRecipe recipes={this.state.previewRecipes}/>
         break;
       case SystemConst.MENU_ITEM_2:
-        this.message = <RecipeMessage recipes={this.state.recipes} />
+        this.message = <ViewRecipe recipes={this.state.recipes} />
         break;
       case SystemConst.MENU_ITEM_4:
         this.message = <LoginCard />

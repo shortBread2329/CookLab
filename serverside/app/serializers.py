@@ -3,16 +3,33 @@ from django_filters import rest_framework as filters
 from rest_framework.serializers import * 
 from .models import *
 
+class UnitSerializer(ModelSerializer):
+    class Meta:
+        model = Unit
+        fields = "__all__"
+
+class UnitFilter(filters.FilterSet):
+    # 部分一致（lookup_expr='contains'）
+    name = filters.CharFilter(lookup_expr='contains')
+    class Meta:
+        model = Unit
+        fields = "__all__"
+
 class IngredientsSerializer(ModelSerializer):
     name = SerializerMethodField()
     quantity = SerializerMethodField()
+    unitId = SerializerMethodField()
+    unitName = SerializerMethodField()
     class Meta:
         model = Ingredients
         fields = [
+            "recipeId",
             "ingredientId",
-            "validFlag",
+            "ingredientGroup",
             "name",
             "quantity",
+            "unitId",
+            "unitName",
         ]
     def get_name(self, obj):
         try:
@@ -28,6 +45,21 @@ class IngredientsSerializer(ModelSerializer):
         except:
             contents = None
             return contents
+    def get_unitId(self, obj):
+        try:
+            contents = obj.ingredientId.name
+            return contents
+        except:
+            contents = None
+            return contents
+    def get_unitName(self, obj):
+        try:
+            contents = obj.unit.name
+            return contents
+        except:
+            contents = None
+            return contents
+        
 
 class IngredientsFilter(filters.FilterSet):
     # 部分一致（lookup_expr='contains'）
@@ -44,7 +76,6 @@ class IngredientSerializer(ModelSerializer):
             "id",
             "name",
             "quantity",
-            "validFlag",
         ]
 
 class IngredientFilter(filters.FilterSet):
@@ -87,7 +118,6 @@ class StepSerializer(ModelSerializer):
         fields = [
             "id",
             "text",
-            "validFlag",
         ]
 
 class StepFilter(filters.FilterSet):
@@ -99,16 +129,8 @@ class StepFilter(filters.FilterSet):
 
 # DBとのシリアライズを担当
 class RecipeSerializer(ModelSerializer):
-    # ingredientId = SerializerMethodField(read_only=True)
-    # ingredients_recipeId = PrimaryKeyRelatedField(queryset=Ingredients.objects.all(), write_only=True)
-    # stepId = SerializerMethodField(read_only=True)
-    ingredientId = SerializerMethodField()
+    ingredient = SerializerMethodField()
     step = SerializerMethodField()
-    # step = StepsSerializer()
-    # step = StepsSerializer(read_only=True)
-    # stepId = PrimaryKeyRelatedField(queryset=Steps.objects.all(),many=True)
-    # ingredientId = IngredientsSerializer(readonly = True)
-    # stepId = serializers.PrimaryKeyRelatedField(queryset=Step.objects.all(), write_only=True)
 
     class Meta:
         model = Recipe
@@ -116,10 +138,9 @@ class RecipeSerializer(ModelSerializer):
         fields = [
             "id",
             "name",
-            "validFlag",
             "usersId",
             # "ingredients_recipeId",
-            "ingredientId",
+            "ingredient",
             "step",
             # "stepId",
         ]
@@ -131,11 +152,11 @@ class RecipeSerializer(ModelSerializer):
     #     del validated_date['stepId']
     #     return Recipe.objects.create(**validated_date)
 
-    def get_ingredientId(self, obj):
+    def get_ingredient(self, obj):
         try:
             # contents = IngredientsSerializer(Ingredients.objects.all().filter(recipeId = Ingredients.objects.get(id=obj.id)), many=True).data
             contents = IngredientsSerializer(Ingredients.objects.all()
-                .filter(recipeId = Recipe.objects.get(id=obj.id)), many=True).data
+                .filter(recipeId = Recipe.objects.get(id=obj.id).order_by('ingredientGroup')), many=True).data
             #↑ここを"Comment.objects.all().filter(target_article = Article.objects.get(id=obj.id)"
             #とだけにすると、"Item is not JSON serializable"というエラーが出ますので
             #Serializer(出力させたいもの).data　という処理が必要です。

@@ -1,29 +1,60 @@
 import React, { Component } from 'react'
-import { Message,List } from 'semantic-ui-react';
+import { Label,Message,Table,Item } from 'semantic-ui-react';
 
 export default class RecipeMessage extends Component {
   render() {
     return(
       //プロパティはオブジェクトとして受け取っているようだったのでArrayに変換
       // Array.from(this.props.recipes).map( recipe => {
-      this.props.recipes.map( recipe => {
+      this.props.recipes.map( function( recipe, index ){
 
-        let recipeItems = [];
-        recipeItems.push(<List.Item>■材料名■</List.Item>);
-        recipe.ingredientId.map( ingredient => {
-          recipeItems.push(<List.Item>{ingredient.ingredientId}:{ingredient.name}:{ingredient.quantity}</List.Item>);
-        })
-        recipeItems.push(<List.Item>■作り方■</List.Item>);
-        recipe.step.map( step => {
-          recipeItems.push(<List.Item>{step.stepNo}:{step.stepText}</List.Item>);
-        })
-    
+        let recipeIngredient = recipe.ingredient.map( ingredient => (
+          <Table.Row key={ingredient.ingredient}>
+            <Table.Cell>{ingredient.name}</Table.Cell>
+            <Table.Cell>{ingredient.quantity}</Table.Cell>
+            <Table.Cell>{ingredient.unit}</Table.Cell>
+          </Table.Row>
+        ))
+
+        let recipeStep = recipe.step.map( step => (
+          <Table.Row key={step.stepId}>
+            <Table.Cell>{step.stepText}</Table.Cell>
+          </Table.Row>))
+
+        let tableElem = (tableBody) => {
+          return(
+            <Table unstackable basic='very' compact='very'>
+              <Table.Body>
+              {tableBody}
+              </Table.Body>
+            </Table>
+          )
+        }
+        let evenFlag = index % 2 === 0 ? "left" : "right"    
         return(
-          <Message key={recipe.id}>
-          <Message.Header>{recipe.name}</Message.Header>
-          <List>{recipeItems}</List>
-          </Message>  
-        )
+      <Message key={recipe.id}>
+        <Item.Group>
+        <Item>
+          <Item.Image size='medium' floated={evenFlag} src={recipe.image} />
+          <Item.Content>
+            <Item.Header as='a'>{recipe.name}</Item.Header>
+            <Item.Description>
+              <Label as='a' color='teal' tag>材料</Label>
+            </Item.Description>
+            <Item.Content>
+              {tableElem(recipeIngredient)}        
+            </Item.Content>
+            <Item.Description>
+              <Label as='a' color='teal' tag>作り方</Label>
+            </Item.Description>
+            <Item.Content>
+              {tableElem(recipeStep)}          
+            </Item.Content>
+          </Item.Content>
+        </Item>
+        </Item.Group>
+      </Message>
+       )
       })
     );
   }
